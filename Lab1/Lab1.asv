@@ -19,17 +19,3 @@ image(img)
 imagesc(img)
 
 %% Resizing the Image
-resized_img = imresize(img, [256 256]);
-image(resized_img);
-
-%% Cropping face image
-
-%% Replacing Face Region with colored boxes
-
-%% Resize face image
-
-%% Save Resized face image
-
-%% Histograms of full image
-
-%% Histograms of face image
