@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99998 (MiKTeX 2.9.6350 64-bit) (preloaded format=xelatex 2017.12.12)  10 JAN 2018 16:09
+This is XeTeX, Version 3.14159265-2.6-0.99998 (MiKTeX 2.9.6350 64-bit) (preloaded format=xelatex 2017.12.12)  10 JAN 2018 16:24
 entering extended mode
 **./HW1.tex
 (HW1.tex
@@ -206,23 +206,27 @@ LaTeX Info: Thecontrolsequence`\]'isalreadyrobust on input line 129.
 \l_MT_below_intertext_sep=\dimen132
 \l_MT_above_shortintertext_sep=\dimen133
 \l_MT_below_shortintertext_sep=\dimen134
+)
+(C:\Users\sbhattacharya\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\lstlang1.
+sty
+File: lstlang1.sty 2015/06/04 1.6 listings language file
 ) (HW1.aux)
 \openout1 = `HW1.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
 
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -262,12 +266,12 @@ LaTeX Font Info:    ... okay on input line 16.
 
 ] (HW1.aux) ) 
 Here is how much of TeX's memory you used:
- 3571 strings out of 427834
- 49322 string characters out of 3152469
- 127635 words of memory out of 3000000
- 7524 multiletter control sequences out of 15000+200000
+ 3613 strings out of 427834
+ 49976 string characters out of 3152469
+ 167722 words of memory out of 3000000
+ 7562 multiletter control sequences out of 15000+200000
  7090 words of font info for 31 fonts, out of 3000000 for 9000
  1328 hyphenation exceptions out of 8191
- 33i,6n,32p,282b,219s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 33i,6n,40p,282b,219s stack positions out of 5000i,500n,10000p,200000b,50000s
 
 Output written on HW1.pdf (1 page).
