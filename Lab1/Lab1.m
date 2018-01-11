@@ -88,7 +88,10 @@ nBins = 50;
 %%
 % Plot it
 plot(centers_red, count_red, 'Red', centers_green, count_green, 'Green', centers_blue, count_blue, 'Blue');
-
+figure;
+subplot(3,1,1), bar(centers_red,count_red,'r');
+subplot(3,1,2), bar(centers_green,count_green,'g');
+subplot(3,1,3), bar(centers_blue,count_blue,'b');
 %% Histograms of face image
 % Extract each of the color channels again converting it to doubles.
 face_red = double(face_img(:,:,1));
@@ -103,4 +106,9 @@ face_blue = double(face_img(:,:,3));
 
 %%
 % Plot it
+figure;
 plot(centers_red_face, count_red_face, 'Red', centers_green_face, count_green_face, 'Green', centers_blue_face, count_blue_face, 'Blue');
+figure;
+subplot(3,1,1), bar(centers_red_face,count_red_face,'r');
+subplot(3,1,2), bar(centers_green_face,count_green_face,'g');
+subplot(3,1,3), bar(centers_blue_face,count_blue_face,'b');
