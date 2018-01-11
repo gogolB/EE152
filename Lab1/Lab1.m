@@ -1,3 +1,5 @@
+%% EE152 Lab 1
+% Souradeep Bhattacharya
 %% Reset the Program
 clear all;
 close all;
@@ -94,9 +96,9 @@ face_blue = double(face_img(:,:,3));
 
 %%
 % Get the histograms for each.
-[count_red_face, centers_red_face] = hist(full_red(:), nBins);
-[count_green_face, centers_green_face] = hist(full_green(:), nBins);
-[count_blue_face, centers_blue_face] = hist(full_blue(:), nBins);
+[count_red_face, centers_red_face] = hist(face_red(:), nBins);
+[count_green_face, centers_green_face] = hist(face_green(:), nBins);
+[count_blue_face, centers_blue_face] = hist(face_blue(:), nBins);
 
 %%
 % Plot it
