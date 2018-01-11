@@ -1,5 +1,6 @@
 %% EE152 Lab 1
 % Souradeep Bhattacharya
+% Section 21
 %% Reset the Program
 clear all;
 close all;

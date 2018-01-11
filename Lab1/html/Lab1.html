@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>EE152 Lab 1</h1><!--introduction--><p>Souradeep Bhattacharya</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Reset the Program</a></li><li><a href="#2">Load the image</a></li><li><a href="#3">Display the image</a></li><li><a href="#6">Resizing the Image</a></li><li><a href="#7">Cropping face image</a></li><li><a href="#8">Replacing Face Region with colored boxes</a></li><li><a href="#15">Resize face image</a></li><li><a href="#16">Save Images</a></li><li><a href="#18">Histograms of full image</a></li><li><a href="#21">Histograms of face image</a></li></ul></div><h2>Reset the Program<a name="1"></a></h2><pre class="codeinput">clear <span class="string">all</span>;
+  </style></head><body><div class="content"><h1>EE152 Lab 1</h1><!--introduction--><p>Souradeep Bhattacharya Section 21</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Reset the Program</a></li><li><a href="#2">Load the image</a></li><li><a href="#3">Display the image</a></li><li><a href="#6">Resizing the Image</a></li><li><a href="#7">Cropping face image</a></li><li><a href="#8">Replacing Face Region with colored boxes</a></li><li><a href="#15">Resize face image</a></li><li><a href="#16">Save Images</a></li><li><a href="#18">Histograms of full image</a></li><li><a href="#21">Histograms of face image</a></li></ul></div><h2>Reset the Program<a name="1"></a></h2><pre class="codeinput">clear <span class="string">all</span>;
 close <span class="string">all</span>;
 </pre><h2>Load the image<a name="2"></a></h2><p>Here I am going to read in the image and store it in a variable <i>img</i></p><pre class="codeinput">img = imread(<span class="string">'gogol.jpg'</span>);
 </pre><h2>Display the image<a name="3"></a></h2><p>Show the image with <tt>imshow()</tt></p><pre class="codeinput">imshow(img)
@@ -111,6 +111,7 @@ face_blue = double(face_img(:,:,3));
 ##### SOURCE BEGIN #####
 %% EE152 Lab 1
 % Souradeep Bhattacharya
+% Section 21
 %% Reset the Program
 clear all;
 close all;
