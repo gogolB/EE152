@@ -19,3 +19,56 @@ image(img)
 imagesc(img)
 
 %% Resizing the Image
+resized_img = imresize(img, [256 256]);
+image(resized_img);
+
+%% Cropping face image
+face_img = img(75:520,100:400,:);
+image(face_img)
+
+%% Replacing Face Region with colored boxes
+% Create a copy of the image.
+boxed_face_img = img(:,:,:);
+%%
+% Add in the white stripe first
+boxed_face_img(75:520,100:159,1:3) = 255;
+%%
+% Add in the black stripe next
+boxed_face_img(75:520,160:219,1:3) = 0;
+%%
+% Add in the Red stripe next
+boxed_face_img(75:520,220:279,1) = 255;
+boxed_face_img(75:520,220:279,2:3) = 0;
+
+%%
+% Add in the Blue stripe next
+boxed_face_img(75:520,280:339,1) = 0;
+boxed_face_img(75:520,280:339,2) = 0;
+boxed_face_img(75:520,280:339,3) = 255;
+%%
+% Add in the Green stripe next
+boxed_face_img(75:520,340:400,1) = 0;
+boxed_face_img(75:520,340:400,2) = 255;
+boxed_face_img(75:520,340:400,3) = 0;
+%%
+% Finally show the iamge
+image(boxed_face_img);
+
+%% Resize face image
+face_img_resized = imresize(face_img, [64 64]);
+image(face_img_resized);
+
+%% Save Images
+% Save the resized full image
+imwrite(resized_img, 'gogol_256.jpg');
+%%
+% Save the resized face image
+imwrite(face_img_resized, 'gogol_face_64.jpg');
+%% Histograms of full image
+img_do
+full_red = img(:,:,1);
+full_green = img(:,:,2);
+full_blue = img(:,:,3);
+y = hist(full_red, 50);
+
+%% Histograms of face image

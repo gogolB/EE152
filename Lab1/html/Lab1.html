@@ -66,14 +66,48 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Reset the Program</a></li><li><a href="#2">Load the image</a></li><li><a href="#3">Display the image</a></li><li><a href="#6">Resizing the Image</a></li></ul></div><h2>Reset the Program<a name="1"></a></h2><pre class="codeinput">clear <span class="string">all</span>;
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Reset the Program</a></li><li><a href="#2">Load the image</a></li><li><a href="#3">Display the image</a></li><li><a href="#6">Resizing the Image</a></li><li><a href="#7">Cropping face image</a></li><li><a href="#8">Replacing Face Region with colored boxes</a></li><li><a href="#15">Resize face image</a></li><li><a href="#16">Save Images</a></li><li><a href="#18">Histograms of full image</a></li><li><a href="#21">Histograms of face image</a></li></ul></div><h2>Reset the Program<a name="1"></a></h2><pre class="codeinput">clear <span class="string">all</span>;
 close <span class="string">all</span>;
 </pre><h2>Load the image<a name="2"></a></h2><p>Here I am going to read in the image and store it in a variable <i>img</i></p><pre class="codeinput">img = imread(<span class="string">'gogol.jpg'</span>);
 </pre><h2>Display the image<a name="3"></a></h2><p>Show the image with <tt>imshow()</tt></p><pre class="codeinput">imshow(img)
 </pre><img vspace="5" hspace="5" src="Lab1_01.png" alt=""> <p>Now I am going to use <tt>image()</tt></p><pre class="codeinput">image(img)
 </pre><img vspace="5" hspace="5" src="Lab1_02.png" alt=""> <p>Finally I am going to use <tt>imagesc()</tt></p><pre class="codeinput">imagesc(img)
 </pre><img vspace="5" hspace="5" src="Lab1_03.png" alt=""> <h2>Resizing the Image<a name="6"></a></h2><pre class="codeinput">resized_img = imresize(img, [256 256]);
-</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+image(resized_img);
+</pre><img vspace="5" hspace="5" src="Lab1_04.png" alt=""> <h2>Cropping face image<a name="7"></a></h2><p>Here I am extracting the face from the full image.</p><pre class="codeinput">face_img = img(75:520,100:400,:);
+image(face_img)
+</pre><img vspace="5" hspace="5" src="Lab1_05.png" alt=""> <h2>Replacing Face Region with colored boxes<a name="8"></a></h2><p>Create a copy of the image.</p><pre class="codeinput">boxed_face_img = img(:,:,:);
+</pre><p>Add in the white stripe first</p><pre class="codeinput">boxed_face_img(75:520,100:159,1:3) = 255;
+</pre><p>Add in the black stripe next</p><pre class="codeinput">boxed_face_img(75:520,160:219,1:3) = 0;
+</pre><p>Add in the Red stripe next</p><pre class="codeinput">boxed_face_img(75:520,220:279,1) = 255;
+boxed_face_img(75:520,220:279,2:3) = 0;
+</pre><p>Add in the Blue stripe next</p><pre class="codeinput">boxed_face_img(75:520,280:339,1) = 0;
+boxed_face_img(75:520,280:339,2) = 0;
+boxed_face_img(75:520,280:339,3) = 255;
+</pre><p>Add in the Green stripe next</p><pre class="codeinput">boxed_face_img(75:520,340:400,1) = 0;
+boxed_face_img(75:520,340:400,2) = 255;
+boxed_face_img(75:520,340:400,3) = 0;
+</pre><p>Finally show the iamge</p><pre class="codeinput">image(boxed_face_img);
+</pre><img vspace="5" hspace="5" src="Lab1_06.png" alt=""> <h2>Resize face image<a name="15"></a></h2><pre class="codeinput">face_img_resized = imresize(face_img, [64 64]);
+image(face_img_resized);
+</pre><img vspace="5" hspace="5" src="Lab1_07.png" alt=""> <h2>Save Images<a name="16"></a></h2><p>Save the resized full image</p><pre class="codeinput">imwrite(resized_img, <span class="string">'gogol_256.jpg'</span>);
+</pre><p>Save the resized face image</p><pre class="codeinput">imwrite(face_img_resized, <span class="string">'gogol_face_64.jpg'</span>);
+</pre><h2>Histograms of full image<a name="18"></a></h2><p>Extract each of the color channels. The channels need to be convered to doubles in order for <tt>hist</tt> to work.</p><pre class="codeinput">full_red = double(img(:,:,1));
+full_green = double(img(:,:,2));
+full_blue = double(img(:,:,3));
+</pre><p>Get the histograms for each. Remebering to convert each matrix to an array</p><pre class="codeinput">nBins = 50;
+[count_red, centers_red] = hist(full_red(:), nBins);
+[count_green, centers_green] = hist(full_green(:), nBins);
+[count_blue, centers_blue] = hist(full_blue(:), nBins);
+</pre><p>Plot it</p><pre class="codeinput">plot(centers_red, count_red, <span class="string">'Red'</span>, centers_green, count_green, <span class="string">'Green'</span>, centers_blue, count_blue, <span class="string">'Blue'</span>);
+</pre><img vspace="5" hspace="5" src="Lab1_08.png" alt=""> <h2>Histograms of face image<a name="21"></a></h2><p>Extract each of the color channels again converting it to doubles.</p><pre class="codeinput">face_red = double(face_img(:,:,1));
+face_green = double(face_img(:,:,2));
+face_blue = double(face_img(:,:,3));
+</pre><p>Get the histograms for each.</p><pre class="codeinput">[count_red_face, centers_red_face] = hist(full_red(:), nBins);
+[count_green_face, centers_green_face] = hist(full_green(:), nBins);
+[count_blue_face, centers_blue_face] = hist(full_blue(:), nBins);
+</pre><p>Plot it</p><pre class="codeinput">plot(centers_red_face, count_red_face, <span class="string">'Red'</span>, centers_green_face, count_green_face, <span class="string">'Green'</span>, centers_blue_face, count_blue_face, <span class="string">'Blue'</span>);
+</pre><img vspace="5" hspace="5" src="Lab1_09.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Reset the Program
 clear all;
@@ -97,5 +131,87 @@ imagesc(img)
 
 %% Resizing the Image
 resized_img = imresize(img, [256 256]);
+image(resized_img);
+
+%% Cropping face image
+% Here I am extracting the face from the full image.
+face_img = img(75:520,100:400,:);
+image(face_img)
+
+%% Replacing Face Region with colored boxes
+% Create a copy of the image.
+boxed_face_img = img(:,:,:);
+%%
+% Add in the white stripe first
+boxed_face_img(75:520,100:159,1:3) = 255;
+%%
+% Add in the black stripe next
+boxed_face_img(75:520,160:219,1:3) = 0;
+%%
+% Add in the Red stripe next
+boxed_face_img(75:520,220:279,1) = 255;
+boxed_face_img(75:520,220:279,2:3) = 0;
+
+%%
+% Add in the Blue stripe next
+boxed_face_img(75:520,280:339,1) = 0;
+boxed_face_img(75:520,280:339,2) = 0;
+boxed_face_img(75:520,280:339,3) = 255;
+%%
+% Add in the Green stripe next
+boxed_face_img(75:520,340:400,1) = 0;
+boxed_face_img(75:520,340:400,2) = 255;
+boxed_face_img(75:520,340:400,3) = 0;
+%%
+% Finally show the iamge
+image(boxed_face_img);
+
+%% Resize face image
+face_img_resized = imresize(face_img, [64 64]);
+image(face_img_resized);
+
+%% Save Images
+% Save the resized full image
+imwrite(resized_img, 'gogol_256.jpg');
+%%
+% Save the resized face image
+imwrite(face_img_resized, 'gogol_face_64.jpg');
+%% Histograms of full image
+% Extract each of the color channels.
+% The channels need to be convered to doubles in order for |hist| to work.
+
+full_red = double(img(:,:,1));
+full_green = double(img(:,:,2));
+full_blue = double(img(:,:,3));
+
+%%
+% Get the histograms for each.
+% Remebering to convert each matrix to an array
+
+nBins = 50;
+[count_red, centers_red] = hist(full_red(:), nBins);
+[count_green, centers_green] = hist(full_green(:), nBins);
+[count_blue, centers_blue] = hist(full_blue(:), nBins);
+
+%%
+% Plot it
+plot(centers_red, count_red, 'Red', centers_green, count_green, 'Green', centers_blue, count_blue, 'Blue');
+
+%% Histograms of face image
+% Extract each of the color channels again converting it to doubles.
+face_red = double(face_img(:,:,1));
+face_green = double(face_img(:,:,2));
+face_blue = double(face_img(:,:,3));
+
+%%
+% Get the histograms for each.
+[count_red_face, centers_red_face] = hist(full_red(:), nBins);
+[count_green_face, centers_green_face] = hist(full_green(:), nBins);
+[count_blue_face, centers_blue_face] = hist(full_blue(:), nBins);
+
+%%
+% Plot it
+plot(centers_red_face, count_red_face, 'Red', centers_green_face, count_green_face, 'Green', centers_blue_face, count_blue_face, 'Blue');
+
 ##### SOURCE END #####
 --></body></html>
