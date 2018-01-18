@@ -1,0 +1,315 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Fun with sampling, registration, and quantization</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-01-18"><meta name="DC.source" content="Lab2.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Fun with sampling, registration, and quantization</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Reset envrioment</a></li><li><a href="#2">Read in images</a></li><li><a href="#3">Sampling and Resizing</a></li><li><a href="#14">Quantization</a></li><li><a href="#20">Registration and detection</a></li></ul></div><h2>Reset envrioment<a name="1"></a></h2><pre class="codeinput">clear <span class="string">all</span>;
+close <span class="string">all</span>;
+</pre><h2>Read in images<a name="2"></a></h2><pre class="codeinput">sky_full_im = imread(<span class="string">'sky.jpg'</span>);
+bricks_full_im = imread(<span class="string">'bricks.jpg'</span>);
+</pre><h2>Sampling and Resizing<a name="3"></a></h2><p>Here we resize the sky image with antialising off and on.</p><pre class="codeinput">sky_128_aliased=imresize(sky_full_im, [128 128], <span class="string">'Antialiasing'</span>,false);
+sky_128 = imresize(sky_full_im, [128 128]);
+</pre><p>Here we show the aliased  sky image</p><pre class="codeinput">figure;
+imshow(sky_128_aliased);
+</pre><img vspace="5" hspace="5" src="Lab2_01.png" style="width:251px;height:193px;" alt=""> <p>And now wae shoe the anti-aliased sky image</p><pre class="codeinput">figure;
+imshow(sky_128);
+</pre><img vspace="5" hspace="5" src="Lab2_02.png" style="width:251px;height:193px;" alt=""> <p>In the case of the above images it is hard to see the effects of aliasing on both images</p><p>Here we resize the bricks image with antialsing off and on.</p><pre class="codeinput">bricks_128_aliased=imresize(bricks_full_im, [128 128], <span class="string">'Antialiasing'</span>,false);
+bricks_128 = imresize(bricks_full_im, [128 128]);
+</pre><p>Here we show the aliased  sky image</p><pre class="codeinput">figure;
+imshow(bricks_128_aliased);
+</pre><img vspace="5" hspace="5" src="Lab2_03.png" style="width:251px;height:193px;" alt=""> <p>And now wae shoe the anti-aliased sky image</p><pre class="codeinput">figure;
+imshow(bricks_128);
+</pre><img vspace="5" hspace="5" src="Lab2_04.png" style="width:251px;height:193px;" alt=""> <p>With the above images we can see that with the antialising off we see aliasing in the bricks. Turning it on results in a better picture.</p><p>Resizing the images using nearest neighboor interpolation. Aliased Image first then antialiased.</p><pre class="codeinput">figure;
+sky_512_aliased_nearest=imresize(sky_128_aliased,[512 512], <span class="string">'method'</span>, <span class="string">'nearest'</span>);
+imshow(sky_512_aliased_nearest)
+sky_512_nearest=imresize(sky_128,[512 512], <span class="string">'method'</span>, <span class="string">'nearest'</span>);
+figure;
+imshow(sky_512_nearest)
+bricks_512_aliased_nearest=imresize(bricks_128_aliased,[512 512], <span class="string">'method'</span>, <span class="string">'nearest'</span>);
+figure;
+imshow(bricks_512_aliased_nearest)
+bricks_512_nearest=imresize(bricks_128,[512 512], <span class="string">'method'</span>, <span class="string">'nearest'</span>);
+figure;
+imshow(bricks_512_nearest)
+</pre><img vspace="5" hspace="5" src="Lab2_05.png" style="width:558px;height:500px;" alt=""> <img vspace="5" hspace="5" src="Lab2_06.png" style="width:558px;height:500px;" alt=""> <img vspace="5" hspace="5" src="Lab2_07.png" style="width:558px;height:500px;" alt=""> <img vspace="5" hspace="5" src="Lab2_08.png" style="width:558px;height:500px;" alt=""> <p>Interpolation with bilinear</p><pre class="codeinput">sky_512_aliased_linear=imresize(sky_128_aliased,[512 512], <span class="string">'method'</span>, <span class="string">'bilinear'</span>);
+figure;
+imshow(sky_512_aliased_linear)
+sky_512_linear=imresize(sky_128,[512 512], <span class="string">'method'</span>, <span class="string">'bilinear'</span>);
+figure;
+imshow(sky_512_linear)
+bricks_512_aliased_linear=imresize(bricks_128_aliased,[512 512], <span class="string">'method'</span>, <span class="string">'bilinear'</span>);
+figure;
+imshow(bricks_512_aliased_linear)
+bricks_512_linear=imresize(bricks_128,[512 512], <span class="string">'method'</span>, <span class="string">'bilinear'</span>);
+figure;
+imshow(bricks_512_linear)
+</pre><img vspace="5" hspace="5" src="Lab2_09.png" style="width:558px;height:500px;" alt=""> <img vspace="5" hspace="5" src="Lab2_10.png" style="width:558px;height:500px;" alt=""> <img vspace="5" hspace="5" src="Lab2_11.png" style="width:558px;height:500px;" alt=""> <img vspace="5" hspace="5" src="Lab2_12.png" style="width:558px;height:500px;" alt=""> <p>Interpolation with bicubic</p><pre class="codeinput">sky_512_aliased_cubic=imresize(sky_128_aliased,[512 512], <span class="string">'method'</span>, <span class="string">'bicubic'</span>);
+figure;
+imshow(sky_512_aliased_cubic)
+sky_512_cubic=imresize(sky_128,[512 512], <span class="string">'method'</span>, <span class="string">'bicubic'</span>);
+figure;
+imshow(sky_512_cubic)
+bricks_512_aliased_cubic=imresize(bricks_128_aliased,[512 512], <span class="string">'method'</span>, <span class="string">'bicubic'</span>);
+figure;
+imshow(bricks_512_aliased_cubic)
+bricks_512_cubic=imresize(bricks_128,[512 512], <span class="string">'method'</span>, <span class="string">'bicubic'</span>);
+figure;
+imshow(bricks_512_cubic)
+</pre><img vspace="5" hspace="5" src="Lab2_13.png" style="width:558px;height:500px;" alt=""> <img vspace="5" hspace="5" src="Lab2_14.png" style="width:558px;height:500px;" alt=""> <img vspace="5" hspace="5" src="Lab2_15.png" style="width:558px;height:500px;" alt=""> <img vspace="5" hspace="5" src="Lab2_16.png" style="width:558px;height:500px;" alt=""> <h2>Quantization<a name="14"></a></h2><p>From this point further I will only be using the anti-aliased image Starting with the Sky image</p><pre class="codeinput">sky_128_q = bitset(sky_128,1, 0);
+figure;
+imshow(sky_128_q)
+title(<span class="string">'Quantized@7'</span>);
+<span class="keyword">for</span> n=2:7
+    sky_128_q = bitset(sky_128_q,n, 0);
+    figure;
+    imshow(sky_128_q);
+    title(strcat(<span class="string">'Quantized@'</span>, num2str(8-n)));
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="Lab2_17.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_18.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_19.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_20.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_21.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_22.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_23.png" style="width:251px;height:193px;" alt=""> <p>I noticed false contouring at quantization level 5.</p><p>To correct for this I have added a small amount of noise.</p><pre class="codeinput">sky_128_noise = imnoise(sky_128, <span class="string">'gaussian'</span>,0,0.0001);
+sky_128_q = bitset(sky_128_noise,1, 0);
+figure;
+imshow(sky_128_q)
+title(<span class="string">'Quantized@7'</span>);
+<span class="keyword">for</span> n=2:7
+    sky_128_q = bitset(sky_128_q,n, 0);
+    figure;
+    imshow(sky_128_q);
+    title(strcat(<span class="string">'Quantized@'</span>, num2str(8-n)));
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="Lab2_24.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_25.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_26.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_27.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_28.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_29.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_30.png" style="width:251px;height:193px;" alt=""> <p>Now with the bricks</p><pre class="codeinput">brick_128_q = bitset(bricks_128,1, 0);
+figure;
+imshow(brick_128_q)
+title(<span class="string">'Quantized@7'</span>);
+<span class="keyword">for</span> n=2:7
+    brick_128_q = bitset(brick_128_q,n, 0);
+    figure;
+    imshow(brick_128_q);
+    title(strcat(<span class="string">'Quantized@'</span>, num2str(8-n)));
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="Lab2_31.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_32.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_33.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_34.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_35.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_36.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_37.png" style="width:251px;height:193px;" alt=""> <p>I noticed false contouring at quantization level 4.</p><p>To correct for this I have added a small amount of noise.</p><pre class="codeinput">brick_128_noise = imnoise(bricks_128, <span class="string">'gaussian'</span>,0,0.0001);
+brick_128_q = bitset(brick_128_noise,1, 0);
+figure;
+imshow(brick_128_q)
+title(<span class="string">'Quantized@7'</span>);
+<span class="keyword">for</span> n=2:7
+    brick_128_q = bitset(brick_128_q,n, 0);
+    figure;
+    imshow(brick_128_q);
+    title(strcat(<span class="string">'Quantized@'</span>, num2str(8-n)));
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="Lab2_38.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_39.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_40.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_41.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_42.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_43.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_44.png" style="width:251px;height:193px;" alt=""> <h2>Registration and detection<a name="20"></a></h2><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Fun with sampling, registration, and quantization
+%% Reset envrioment
+clear all;
+close all;
+%% Read in images
+sky_full_im = imread('sky.jpg');
+bricks_full_im = imread('bricks.jpg');
+
+%% Sampling and Resizing
+% Here we resize the sky image with antialising off and on.
+sky_128_aliased=imresize(sky_full_im, [128 128], 'Antialiasing',false);
+sky_128 = imresize(sky_full_im, [128 128]);
+
+
+%%
+% Here we show the aliased  sky image
+figure;
+imshow(sky_128_aliased);
+%%
+% And now wae shoe the anti-aliased sky image
+figure;
+imshow(sky_128);
+%%
+% In the case of the above images it is hard to see the effects of aliasing
+% on both images
+%%
+% Here we resize the bricks image with antialsing off and on.
+bricks_128_aliased=imresize(bricks_full_im, [128 128], 'Antialiasing',false);
+bricks_128 = imresize(bricks_full_im, [128 128]);
+%%
+% Here we show the aliased  sky image
+figure;
+imshow(bricks_128_aliased);
+%%
+% And now wae shoe the anti-aliased sky image
+figure;
+imshow(bricks_128);
+%%
+% With the above images we can see that with the antialising off we see
+% aliasing in the bricks. Turning it on results in a better picture.
+%%
+% Resizing the images using nearest neighboor interpolation. Aliased Image first then
+% antialiased.
+figure;
+sky_512_aliased_nearest=imresize(sky_128_aliased,[512 512], 'method', 'nearest');
+imshow(sky_512_aliased_nearest)
+sky_512_nearest=imresize(sky_128,[512 512], 'method', 'nearest');
+figure;
+imshow(sky_512_nearest)
+bricks_512_aliased_nearest=imresize(bricks_128_aliased,[512 512], 'method', 'nearest');
+figure;
+imshow(bricks_512_aliased_nearest)
+bricks_512_nearest=imresize(bricks_128,[512 512], 'method', 'nearest');
+figure;
+imshow(bricks_512_nearest)
+
+%%
+% Interpolation with bilinear
+sky_512_aliased_linear=imresize(sky_128_aliased,[512 512], 'method', 'bilinear');
+figure;
+imshow(sky_512_aliased_linear)
+sky_512_linear=imresize(sky_128,[512 512], 'method', 'bilinear');
+figure;
+imshow(sky_512_linear)
+bricks_512_aliased_linear=imresize(bricks_128_aliased,[512 512], 'method', 'bilinear');
+figure;
+imshow(bricks_512_aliased_linear)
+bricks_512_linear=imresize(bricks_128,[512 512], 'method', 'bilinear');
+figure;
+imshow(bricks_512_linear)
+
+%%
+% Interpolation with bicubic
+sky_512_aliased_cubic=imresize(sky_128_aliased,[512 512], 'method', 'bicubic');
+figure;
+imshow(sky_512_aliased_cubic)
+sky_512_cubic=imresize(sky_128,[512 512], 'method', 'bicubic');
+figure;
+imshow(sky_512_cubic)
+bricks_512_aliased_cubic=imresize(bricks_128_aliased,[512 512], 'method', 'bicubic');
+figure;
+imshow(bricks_512_aliased_cubic)
+bricks_512_cubic=imresize(bricks_128,[512 512], 'method', 'bicubic');
+figure;
+imshow(bricks_512_cubic)
+
+%% Quantization
+% From this point further I will only be using the anti-aliased image
+% Starting with the Sky image
+sky_128_q = bitset(sky_128,1, 0);
+figure;
+imshow(sky_128_q)
+title('Quantized@7');
+for n=2:7
+    sky_128_q = bitset(sky_128_q,n, 0);
+    figure;
+    imshow(sky_128_q);
+    title(strcat('Quantized@', num2str(8-n)));
+end
+
+%%
+% I noticed false contouring at quantization level 5.
+
+%%
+% To correct for this I have added a small amount of noise.
+sky_128_noise = imnoise(sky_128, 'gaussian',0,0.0001);
+sky_128_q = bitset(sky_128_noise,1, 0);
+figure;
+imshow(sky_128_q)
+title('Quantized@7');
+for n=2:7
+    sky_128_q = bitset(sky_128_q,n, 0);
+    figure;
+    imshow(sky_128_q);
+    title(strcat('Quantized@', num2str(8-n)));
+end
+%%
+% Now with the bricks
+brick_128_q = bitset(bricks_128,1, 0);
+figure;
+imshow(brick_128_q)
+title('Quantized@7');
+for n=2:7
+    brick_128_q = bitset(brick_128_q,n, 0);
+    figure;
+    imshow(brick_128_q);
+    title(strcat('Quantized@', num2str(8-n)));
+end
+%%
+% I noticed false contouring at quantization level 4.
+%%
+% To correct for this I have added a small amount of noise.
+brick_128_noise = imnoise(bricks_128, 'gaussian',0,0.0001);
+brick_128_q = bitset(brick_128_noise,1, 0);
+figure;
+imshow(brick_128_q)
+title('Quantized@7');
+for n=2:7
+    brick_128_q = bitset(brick_128_q,n, 0);
+    figure;
+    imshow(brick_128_q);
+    title(strcat('Quantized@', num2str(8-n)));
+end
+%% Registration and detection
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>
