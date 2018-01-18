@@ -1,4 +1,6 @@
 %% Fun with sampling, registration, and quantization
+% Souradeep Bhattacharya
+% 861105938
 %% Reset envrioment
 clear all;
 close all;
@@ -142,7 +144,40 @@ for n=2:7
     title(strcat('Quantized@', num2str(8-n)));
 end
 %% Registration and detection
+% Read in and load the images
+bg_img = rgb2gray(imread('bg2.jpg'));
+fg_img = rgb2gray(imread('fg2.jpg'));
 
+figure;
+imshow(bg_img)
+title('Background image')
+figure;
+imshow(fg_img)
+title('Foreground image')
+
+%%
+% Register the Images
+[optimizer, metric] = imregconfig('Multimodal');
+
+registered = imregister(fg_img, bg_img,'Similarity', optimizer, metric);
+figure;
+imshowpair(registered, bg_img)
+title('Registed Image')
+
+%%
+% Difference the images
+d_img = imabsdiff(registered,bg_img);
+
+figure;
+imshow(d_img)
+title('Differenced Image')
+
+%%
+% Threshold the image
+d_img_bw = im2bw(double(d_img)./255, 0.4);
+figure;
+imshow(d_img_bw)
+title('Binary Image')
 
 
 

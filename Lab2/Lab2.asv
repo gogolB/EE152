@@ -1,4 +1,6 @@
 %% Fun with sampling, registration, and quantization
+% Souradeep Bhattacharya
+% 861105938
 %% Reset envrioment
 clear all;
 close all;
@@ -99,8 +101,12 @@ for n=2:7
 end
 
 %%
-% Now with the bricks
-b_128_q = bitset(sky_128,1, 0);
+% I noticed false contouring at quantization level 5.
+
+%%
+% To correct for this I have added a small amount of noise.
+sky_128_noise = imnoise(sky_128, 'gaussian',0,0.0001);
+sky_128_q = bitset(sky_128_noise,1, 0);
 figure;
 imshow(sky_128_q)
 title('Quantized@7');
@@ -110,9 +116,62 @@ for n=2:7
     imshow(sky_128_q);
     title(strcat('Quantized@', num2str(8-n)));
 end
-
+%%
+% Now with the bricks
+brick_128_q = bitset(bricks_128,1, 0);
+figure;
+imshow(brick_128_q)
+title('Quantized@7');
+for n=2:7
+    brick_128_q = bitset(brick_128_q,n, 0);
+    figure;
+    imshow(brick_128_q);
+    title(strcat('Quantized@', num2str(8-n)));
+end
+%%
+% I noticed false contouring at quantization level 4.
+%%
+% To correct for this I have added a small amount of noise.
+brick_128_noise = imnoise(bricks_128, 'gaussian',0,0.0001);
+brick_128_q = bitset(brick_128_noise,1, 0);
+figure;
+imshow(brick_128_q)
+title('Quantized@7');
+for n=2:7
+    brick_128_q = bitset(brick_128_q,n, 0);
+    figure;
+    imshow(brick_128_q);
+    title(strcat('Quantized@', num2str(8-n)));
+end
 %% Registration and detection
+% Read in and load the images
+bg_img = rgb2gray(imread('bg2.jpg'));
+fg_img = rgb2gray(imread('fg2.jpg'));
 
+figure;
+imshow(bg_img)
+title("
+
+%%
+% Register the Images
+[optimizer, metric] = imregconfig('Multimodal');
+
+registered = imregister(fg_img, bg_img,'Similarity', optimizer, metric);
+figure;
+imshowpair(registered, bg_img)
+
+%%
+% Difference the images
+d_img = imabsdiff(registered,bg_img);
+
+figure;
+imshow(d_img)
+
+%%
+% Threshold the image
+d_img_bw = im2bw(double(d_img)./255, 0.4);
+figure;
+imshow(d_img_bw)
 
 
 

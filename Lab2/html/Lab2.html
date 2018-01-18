@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Fun with sampling, registration, and quantization</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Reset envrioment</a></li><li><a href="#2">Read in images</a></li><li><a href="#3">Sampling and Resizing</a></li><li><a href="#14">Quantization</a></li><li><a href="#20">Registration and detection</a></li></ul></div><h2>Reset envrioment<a name="1"></a></h2><pre class="codeinput">clear <span class="string">all</span>;
+  </style></head><body><div class="content"><h1>Fun with sampling, registration, and quantization</h1><!--introduction--><p>Souradeep Bhattacharya 861105938</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Reset envrioment</a></li><li><a href="#2">Read in images</a></li><li><a href="#3">Sampling and Resizing</a></li><li><a href="#14">Quantization</a></li><li><a href="#20">Registration and detection</a></li></ul></div><h2>Reset envrioment<a name="1"></a></h2><pre class="codeinput">clear <span class="string">all</span>;
 close <span class="string">all</span>;
 </pre><h2>Read in images<a name="2"></a></h2><pre class="codeinput">sky_full_im = imread(<span class="string">'sky.jpg'</span>);
 bricks_full_im = imread(<span class="string">'bricks.jpg'</span>);
@@ -160,9 +160,40 @@ title(<span class="string">'Quantized@7'</span>);
     imshow(brick_128_q);
     title(strcat(<span class="string">'Quantized@'</span>, num2str(8-n)));
 <span class="keyword">end</span>
-</pre><img vspace="5" hspace="5" src="Lab2_38.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_39.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_40.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_41.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_42.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_43.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_44.png" style="width:251px;height:193px;" alt=""> <h2>Registration and detection<a name="20"></a></h2><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+</pre><img vspace="5" hspace="5" src="Lab2_38.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_39.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_40.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_41.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_42.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_43.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab2_44.png" style="width:251px;height:193px;" alt=""> <h2>Registration and detection<a name="20"></a></h2><p>Read in and load the images</p><pre class="codeinput">bg_img = rgb2gray(imread(<span class="string">'bg2.jpg'</span>));
+fg_img = rgb2gray(imread(<span class="string">'fg2.jpg'</span>));
+
+figure;
+imshow(bg_img)
+title(<span class="string">'Background image'</span>)
+figure;
+imshow(fg_img)
+title(<span class="string">'Foreground image'</span>)
+</pre><pre class="codeoutput">Warning: Image is too big to fit on screen; displaying at 67% 
+Warning: Image is too big to fit on screen; displaying at 67% 
+</pre><img vspace="5" hspace="5" src="Lab2_45.png" style="width:437px;height:602px;" alt=""> <img vspace="5" hspace="5" src="Lab2_46.png" style="width:437px;height:602px;" alt=""> <p>Register the Images</p><pre class="codeinput">[optimizer, metric] = imregconfig(<span class="string">'Multimodal'</span>);
+
+registered = imregister(fg_img, bg_img,<span class="string">'Similarity'</span>, optimizer, metric);
+figure;
+imshowpair(registered, bg_img)
+title(<span class="string">'Registed Image'</span>)
+</pre><pre class="codeoutput">Warning: Image is too big to fit on screen; displaying at 67% 
+</pre><img vspace="5" hspace="5" src="Lab2_47.png" style="width:437px;height:602px;" alt=""> <p>Difference the images</p><pre class="codeinput">d_img = imabsdiff(registered,bg_img);
+
+figure;
+imshow(d_img)
+title(<span class="string">'Differenced Image'</span>)
+</pre><pre class="codeoutput">Warning: Image is too big to fit on screen; displaying at 67% 
+</pre><img vspace="5" hspace="5" src="Lab2_48.png" style="width:437px;height:602px;" alt=""> <p>Threshold the image</p><pre class="codeinput">d_img_bw = im2bw(double(d_img)./255, 0.4);
+figure;
+imshow(d_img_bw)
+title(<span class="string">'Binary Image'</span>)
+</pre><pre class="codeoutput">Warning: Image is too big to fit on screen; displaying at 67% 
+</pre><img vspace="5" hspace="5" src="Lab2_49.png" style="width:437px;height:602px;" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Fun with sampling, registration, and quantization
+% Souradeep Bhattacharya
+% 861105938
 %% Reset envrioment
 clear all;
 close all;
@@ -306,7 +337,40 @@ for n=2:7
     title(strcat('Quantized@', num2str(8-n)));
 end
 %% Registration and detection
+% Read in and load the images
+bg_img = rgb2gray(imread('bg2.jpg'));
+fg_img = rgb2gray(imread('fg2.jpg'));
 
+figure;
+imshow(bg_img)
+title('Background image')
+figure;
+imshow(fg_img)
+title('Foreground image')
+
+%%
+% Register the Images
+[optimizer, metric] = imregconfig('Multimodal');
+
+registered = imregister(fg_img, bg_img,'Similarity', optimizer, metric);
+figure;
+imshowpair(registered, bg_img)
+title('Registed Image')
+
+%%
+% Difference the images
+d_img = imabsdiff(registered,bg_img);
+
+figure;
+imshow(d_img)
+title('Differenced Image')
+
+%%
+% Threshold the image
+d_img_bw = im2bw(double(d_img)./255, 0.4);
+figure;
+imshow(d_img_bw)
+title('Binary Image')
 
 
 
