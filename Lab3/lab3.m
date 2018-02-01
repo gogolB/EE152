@@ -56,11 +56,9 @@ imagesc(angle(fftshift(fft2(bricks_hpf))))
 title('Phase of the bricks after HPF');
 %% 
 % The energy for the high pass and low pass are given by:
-energy_lpf = abs(fft2(bricks_lpf));
-total_energy_lpf = sum(energy_lpf(:));
-energy_hpf = abs(fft2(bricks_hpf));
-total_energy_hpf = sum(energy_hpf(:));
-fprintf('Bricks Energy HPF = %d, LPF Energy = %d\n', total_energy_hpf, total_energy_lpf);
+energy_lpf = norm(fft2(bricks_lpf),2);
+energy_hpf = norm(fft2(bricks_hpf),2);
+fprintf('Bricks Energy HPF = %d, LPF Energy = %d\n', energy_hpf, energy_lpf);
 %% 
 % Doing the same to the sky image yields the following:
 sky_lpf = imfilter(sky_gray, lpf, 'replicate');
@@ -88,10 +86,10 @@ title('Phase of the sky after HPF');
 
 %% 
 % The energy for the high pass and low pass are given by:
-energy_lpf = abs(fft2(sky_lpf));
-total_energy_lpf = sum(energy_lpf(:));
-energy_hpf = abs(fft2(sky_hpf));
-total_energy_hpf = sum(energy_hpf(:));
-fprintf('Sky Energy HPF = %d, LPF Energy = %d\n', total_energy_hpf, total_energy_lpf);
-
+energy_lpf = norm(fft2(sky_lpf),2);
+energy_hpf = norm(fft2(sky_hpf),2);
+fprintf('Sky Energy HPF = %d, LPF Energy = %d\n', energy_hpf, energy_lpf);
+%%
+% 
+%% Spatial Frequencies 2
 
