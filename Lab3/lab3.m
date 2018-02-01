@@ -92,4 +92,5 @@ fprintf('Sky Energy HPF = %d, LPF Energy = %d\n', energy_hpf, energy_lpf);
 %%
 % 
 %% Spatial Frequencies 2
-
+%% More Fun with Frequencies
+%% Geometric Transforms
