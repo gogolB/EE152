@@ -1,0 +1,33 @@
+%% Lab 3
+%%
+clear all;
+close all;
+clc;
+%% Spatial Frequencies 1
+%%
+% Loading in and Resizing the images
+bricks = imread('bricks.jpg');
+sky = imread('sky.jpg');
+
+bricks_256 = imresize(bricks, [256 256]);
+sky_256 = imresize(sky, [256 256]);
+%%
+% Displaying the Fourier Transform of the bricks and the sky
+figure;
+imshow(bricks_256)
+bricks_gray = rgb2gray(bricks_256);
+figure;
+imagesc(log(abs(fftshift(fft2(bricks_gray)))))
+
+figure;
+imshow(sky_256)
+sky_gray = rgb2gray(sky_256);
+figure;
+imagesc(log(abs(fftshift(fft2(sky_gray)))))
+%%
+% Applying a low pass filter to the bricks yields the following
+lpf = fspecial('gaussian',10,0.2);
+hpf = 1 - lpf;
+bricks_lpf = imfilter(bricks_gray, lpf, 'replicate');
+bricks_hpf = imfilter(bricks_gray, hpf, 'replicate');
+
