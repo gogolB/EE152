@@ -212,21 +212,10 @@ title('B with highboost - J1');
 % Swapping the phase of the two images.
 g_mag = abs(g_fft);
 b_mag = abs(b_fft);
-g_phase = angle(g_fft);
-b_phase = angle(b_fft);
+g_phase = phase(g_fft);
+b_phase = phase(b_fft);
 
 swapped1 = g_mag .* exp(1i*b_phase);
-swapped2 = b_mag .* exp(1i*g_phase);
-
-s1_img = uint8(ifft2(swapped1));
-s2_img = uint8(ifft2(swapped2));
-
-figure;
-imshow(s1_img);
-title('G Magnitude with B phase');
-
-figure;
-imshow(s2_img);
-title('B Magnitude with G phase');
+swapped2 = b_mag .* exp(1i*
 %% More Fun with Frequencies
 %% Geometric Transforms
