@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Lab 3</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-02-01"><meta name="DC.source" content="lab3.m"><style type="text/css">
+      --><title>Lab 3</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-02-06"><meta name="DC.source" content="lab3.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Lab 3</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Spatial Frequencies 1</a></li><li><a href="#10">Spatial Frequencies 2</a></li></ul></div><pre class="codeinput">clear <span class="string">all</span>;
+  </style></head><body><div class="content"><h1>Lab 3</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Spatial Frequencies 1</a></li><li><a href="#11">Spatial Frequencies 2</a></li><li><a href="#15">More Fun with Frequencies</a></li><li><a href="#16">Geometric Transforms</a></li></ul></div><pre class="codeinput">clear <span class="string">all</span>;
 close <span class="string">all</span>;
 clc;
 </pre><h2>Spatial Frequencies 1<a name="2"></a></h2><p>Loading in and Resizing the images</p><pre class="codeinput">bricks = imread(<span class="string">'bricks.jpg'</span>);
@@ -143,7 +143,131 @@ title(<span class="string">'Phase of the sky after HPF'</span>);
 energy_hpf = norm(fft2(sky_hpf),2);
 fprintf(<span class="string">'Sky Energy HPF = %d, LPF Energy = %d\n'</span>, energy_hpf, energy_lpf);
 </pre><pre class="codeoutput">Sky Energy HPF = 1.646941e+04, LPF Energy = 8.817600e+06
-</pre><h2>Spatial Frequencies 2<a name="10"></a></h2><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+</pre><p>Adding in some singals to the FFT yields the following:</p><pre class="codeinput">sky_fft = fftshift(fft2(sky_gray));
+
+figure;
+imagesc(log(abs(sky_fft)));
+title(<span class="string">'FFT before adding signal'</span>);
+
+amt_to_add = 10e5;
+
+sky_fft(128+64,128+64) = amt_to_add;
+sky_fft(128-64,128-64) = amt_to_add;
+sky_fft(128-64,128+64) = amt_to_add;
+sky_fft(128+64,128-64) = amt_to_add;
+
+sky_fft(128,128+64) = amt_to_add;
+sky_fft(128,128-64) = amt_to_add;
+sky_fft(128+64,128) = amt_to_add;
+sky_fft(128-64,128) = amt_to_add;
+
+figure;
+imagesc(log(abs(sky_fft)));
+title(<span class="string">'FFT after adding signal'</span>);
+
+sky_fft_modified = ifftshift(sky_fft);
+sky_gray_modfied = uint8(ifft2(sky_fft_modified));
+
+figure;
+imshow(sky_gray_modfied);
+title(<span class="string">'Image after adding signal'</span>);
+</pre><pre class="codeoutput">Warning: Displaying real part of complex input. 
+</pre><img vspace="5" hspace="5" src="lab3_17.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="lab3_18.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="lab3_19.png" style="width:354px;height:295px;" alt=""> <p>Removing the signal</p><pre class="codeinput">sky_fft(128+64,128+64) = 0;
+sky_fft(128-64,128-64) = 0;
+sky_fft(128-64,128+64) = 0;
+sky_fft(128+64,128-64) = 0;
+
+sky_fft(128,128+64) = 0;
+sky_fft(128,128-64) = 0;
+sky_fft(128+64,128) = 0;
+sky_fft(128-64,128) = 0;
+
+figure;
+imagesc(log(abs(sky_fft)));
+title(<span class="string">'FFT after removing signal'</span>);
+
+sky_fft_modified = ifftshift(sky_fft);
+sky_gray_modfied = uint8(ifft2(sky_fft_modified));
+
+figure;
+imshow(sky_gray_modfied);
+title(<span class="string">'Image after Removing signal'</span>);
+</pre><img vspace="5" hspace="5" src="lab3_20.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="lab3_21.png" style="width:354px;height:295px;" alt=""> <h2>Spatial Frequencies 2<a name="11"></a></h2><p>Load in the images</p><pre class="codeinput">g_img = imread(<span class="string">'G.jpg'</span>);
+b_img = imread(<span class="string">'B.jpg'</span>);
+
+g_256 = imresize(g_img, [256 256]);
+b_256 = imresize(b_img, [256 256]);
+
+g_gray = rgb2gray(g_256);
+g_gray = imrotate(g_gray, 90);
+b_gray = rgb2gray(b_256);
+
+g_fft = fft2(g_gray);
+b_fft = fft2(b_gray);
+
+figure;
+imshow(g_gray);
+title(<span class="string">'G Image'</span>);
+
+figure;
+imagesc(log(abs(fftshift(g_fft))));
+title(<span class="string">'FFT of G Image'</span>);
+
+figure;
+imshow(b_gray);
+title(<span class="string">'B Image'</span>);
+
+figure;
+imagesc(log(abs(fftshift(b_fft))));
+title(<span class="string">'FFT of B Image'</span>);
+</pre><img vspace="5" hspace="5" src="lab3_22.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_23.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="lab3_24.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_25.png" style="width:560px;height:420px;" alt=""> <p>Sharpening the image with unsharp</p><pre class="codeinput">g_unsharp = imsharpen(g_gray);
+b_unsharp = imsharpen(b_gray);
+
+figure;
+imshow(g_unsharp);
+title(<span class="string">'G with unsharp'</span>);
+
+figure;
+imshow(b_unsharp);
+title(<span class="string">'B with unsharp'</span>);
+</pre><img vspace="5" hspace="5" src="lab3_26.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_27.png" style="width:354px;height:295px;" alt=""> <p>Sharpening the images with high boost</p><pre class="codeinput">[J0, J1] = Highboost(g_gray, 1.5);
+
+figure;
+imshow(J0);
+title(<span class="string">'G with highboost - J0'</span>);
+
+figure;
+imshow(J1);
+title(<span class="string">'G with highboost - J1'</span>);
+
+[J0, J1] = Highboost(b_gray, 1.5);
+
+figure;
+imshow(J0);
+title(<span class="string">'B with highboost - J0'</span>);
+
+figure;
+imshow(J1);
+title(<span class="string">'B with highboost - J1'</span>);
+</pre><img vspace="5" hspace="5" src="lab3_28.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_29.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_30.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_31.png" style="width:354px;height:295px;" alt=""> <p>Swapping the phase of the two images.</p><pre class="codeinput">g_mag = abs(g_fft);
+b_mag = abs(b_fft);
+g_phase = angle(g_fft);
+b_phase = angle(b_fft);
+
+swapped1 = g_mag .* exp(1i*b_phase);
+swapped2 = b_mag .* exp(1i*g_phase);
+
+s1_img = uint8(ifft2(swapped1));
+s2_img = uint8(ifft2(swapped2));
+
+figure;
+imshow(s1_img);
+title(<span class="string">'G Magnitude with B phase'</span>);
+
+figure;
+imshow(s2_img);
+title(<span class="string">'B Magnitude with G phase'</span>);
+</pre><img vspace="5" hspace="5" src="lab3_32.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_33.png" style="width:354px;height:295px;" alt=""> <h2>More Fun with Frequencies<a name="15"></a></h2><h2>Geometric Transforms<a name="16"></a></h2><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Lab 3
 %%
@@ -237,9 +361,146 @@ energy_lpf = norm(fft2(sky_lpf),2);
 energy_hpf = norm(fft2(sky_hpf),2);
 fprintf('Sky Energy HPF = %d, LPF Energy = %d\n', energy_hpf, energy_lpf);
 %%
-% 
-%% Spatial Frequencies 2
+% Adding in some singals to the FFT yields the following:
+sky_fft = fftshift(fft2(sky_gray));
 
+figure;
+imagesc(log(abs(sky_fft)));
+title('FFT before adding signal');
+
+amt_to_add = 10e5;
+
+sky_fft(128+64,128+64) = amt_to_add;
+sky_fft(128-64,128-64) = amt_to_add;
+sky_fft(128-64,128+64) = amt_to_add;
+sky_fft(128+64,128-64) = amt_to_add;  
+
+sky_fft(128,128+64) = amt_to_add;  
+sky_fft(128,128-64) = amt_to_add;  
+sky_fft(128+64,128) = amt_to_add;  
+sky_fft(128-64,128) = amt_to_add;  
+
+figure;
+imagesc(log(abs(sky_fft)));
+title('FFT after adding signal');
+
+sky_fft_modified = ifftshift(sky_fft);
+sky_gray_modfied = uint8(ifft2(sky_fft_modified));
+
+figure;
+imshow(sky_gray_modfied);
+title('Image after adding signal');
+
+%%
+% Removing the signal
+sky_fft(128+64,128+64) = 0;
+sky_fft(128-64,128-64) = 0;
+sky_fft(128-64,128+64) = 0;
+sky_fft(128+64,128-64) = 0;  
+
+sky_fft(128,128+64) = 0;  
+sky_fft(128,128-64) = 0;  
+sky_fft(128+64,128) = 0;  
+sky_fft(128-64,128) = 0;  
+
+figure;
+imagesc(log(abs(sky_fft)));
+title('FFT after removing signal');
+
+sky_fft_modified = ifftshift(sky_fft);
+sky_gray_modfied = uint8(ifft2(sky_fft_modified));
+
+figure;
+imshow(sky_gray_modfied);
+title('Image after Removing signal');
+
+%% Spatial Frequencies 2
+% Load in the images
+g_img = imread('G.jpg');
+b_img = imread('B.jpg');
+
+g_256 = imresize(g_img, [256 256]);
+b_256 = imresize(b_img, [256 256]);
+
+g_gray = rgb2gray(g_256);
+g_gray = imrotate(g_gray, 90);
+b_gray = rgb2gray(b_256);
+
+g_fft = fft2(g_gray);
+b_fft = fft2(b_gray);
+
+figure;
+imshow(g_gray);
+title('G Image');
+
+figure;
+imagesc(log(abs(fftshift(g_fft))));
+title('FFT of G Image');
+
+figure;
+imshow(b_gray);
+title('B Image');
+
+figure;
+imagesc(log(abs(fftshift(b_fft))));
+title('FFT of B Image');
+%%
+% Sharpening the image with unsharp
+g_unsharp = imsharpen(g_gray);
+b_unsharp = imsharpen(b_gray);
+
+figure;
+imshow(g_unsharp);
+title('G with unsharp');
+
+figure;
+imshow(b_unsharp);
+title('B with unsharp');
+
+%%
+% Sharpening the images with high boost
+[J0, J1] = Highboost(g_gray, 1.5);
+
+figure;
+imshow(J0);
+title('G with highboost - J0');
+
+figure;
+imshow(J1);
+title('G with highboost - J1');
+
+[J0, J1] = Highboost(b_gray, 1.5);
+
+figure;
+imshow(J0);
+title('B with highboost - J0');
+
+figure;
+imshow(J1);
+title('B with highboost - J1');
+
+%%
+% Swapping the phase of the two images.
+g_mag = abs(g_fft);
+b_mag = abs(b_fft);
+g_phase = angle(g_fft);
+b_phase = angle(b_fft);
+
+swapped1 = g_mag .* exp(1i*b_phase);
+swapped2 = b_mag .* exp(1i*g_phase);
+
+s1_img = uint8(ifft2(swapped1));
+s2_img = uint8(ifft2(swapped2));
+
+figure;
+imshow(s1_img);
+title('G Magnitude with B phase');
+
+figure;
+imshow(s2_img);
+title('B Magnitude with G phase');
+%% More Fun with Frequencies
+%% Geometric Transforms
 
 ##### SOURCE END #####
 --></body></html>
