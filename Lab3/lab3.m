@@ -229,4 +229,40 @@ figure;
 imshow(s2_img);
 title('B Magnitude with G phase');
 %% More Fun with Frequencies
+
+gogol = imread('fg2.jpg');
+%gogol = imcrop(gogol, [194 290 333 538]);
+gogol = imcrop(gogol, [194 290 139 248]);
+gogol = imresize(gogol, [256 256]);
+
+jesse = imread('Jesse.jpg');
+%jesse = imcrop(jesse, [163 177 260 351]);
+jesse = imcrop(jesse, [163 177 97 174]);
+jesse = imresize(jesse, [256 256]);
+
+fixedPt = [82 118; 172 120];
+movingPt = [90 128; 176 139];
+
+tform = fitgeotrans(movingPt,fixedPt,'NonreflectiveSimilarity');
+
+Jregistered = imwarp(jesse,tform,'OutputView',imref2d(size(gogol)));
+
+figure;
+imshowpair(gogol,Jregistered)
+title('Images of Jesse and Me after being reg');
+
+lpf = fspecial('gaussian',5,10);
+hpf = [0 0 0 0 0;
+       0 0 0 0 0;
+       0 0 1 0 0;
+       0 0 0 0 0;
+       0 0 0 0 0] - lpf;
+
+gogol_lpf = imfilter(double(gogol), lpf, 'replicate');
+Jregistered_hpf = imfilter(double(Jregistered), hpf, 'replicate');
+
+figure;
+imshow(uint8(imfuse(gogol_lpf,Jregistered_hpf)));
+title('High freq of Jesse and Low freq of Gogol');
+
 %% Geometric Transforms

@@ -212,10 +212,57 @@ title('B with highboost - J1');
 % Swapping the phase of the two images.
 g_mag = abs(g_fft);
 b_mag = abs(b_fft);
-g_phase = phase(g_fft);
-b_phase = phase(b_fft);
+g_phase = angle(g_fft);
+b_phase = angle(b_fft);
 
 swapped1 = g_mag .* exp(1i*b_phase);
-swapped2 = b_mag .* exp(1i*
+swapped2 = b_mag .* exp(1i*g_phase);
+
+s1_img = uint8(ifft2(swapped1));
+s2_img = uint8(ifft2(swapped2));
+
+figure;
+imshow(s1_img);
+title('G Magnitude with B phase');
+
+figure;
+imshow(s2_img);
+title('B Magnitude with G phase');
 %% More Fun with Frequencies
+
+gogol = imread('fg2.jpg');
+%gogol = imcrop(gogol, [194 290 333 538]);
+gogol = imcrop(gogol, [194 290 139 248]);
+gogol = imresize(gogol, [256 256]);
+
+jesse = imread('Jesse.jpg');
+%jesse = imcrop(jesse, [163 177 260 351]);
+jesse = imcrop(jesse, [163 177 97 174]);
+jesse = imresize(jesse, [256 256]);
+
+fixedPt = [82 118; 172 120];
+movingPt = [90 128; 176 139];
+
+tform = fitgeotrans(movingPt,fixedPt,'NonreflectiveSimilarity');
+
+Jregistered = imwarp(jesse,tform,'OutputView',imref2d(size(gogol)));
+
+figure;
+imshowpair(gogol,Jregistered)
+title('Images of Jesse and Me after being reg');
+
+lpf = fspecial('gaussian',5,1.0);
+hpf = [0 0 0 0 0;
+       0 0 0 0 0;
+       0 0 1 0 0;
+       0 0 0 0 0;
+       0 0 0 0 0] - lpf;
+
+gogol_lpf = imfilter(double(gogol), lpf, 'replicate');
+Jregistered_hpf = imfilter(double(Jregistered), hpf, 'replicate');
+
+figure;
+imshow(uint8(imfuse(gogol_lpf + Jregistered_hpf));
+title('High freq of Jesse and Low freq of Gogol');
+
 %% Geometric Transforms
