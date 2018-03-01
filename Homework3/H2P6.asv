@@ -1,7 +1,0 @@
-M = eye(4);
-F = fft2(M);
-R = [fft(M(1,:));fft(M(2,:));fft(M(3,:));fft(M(4,:))];
-F2 = [fft(R(:,1)) fft(R(:,2)) fft(R(:,3)) fft(R(:,4))];
-
-result = F  F2
-

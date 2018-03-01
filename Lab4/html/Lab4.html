@@ -1,0 +1,183 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Lab4</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-03-01"><meta name="DC.source" content="Lab4.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Lab 4:  Multiscale representation and image enhancements</a></li><li><a href="#2">Part A</a></li><li><a href="#3">Part B</a></li><li><a href="#4">Part C</a></li></ul></div><h2>Lab 4:  Multiscale representation and image enhancements<a name="1"></a></h2><p>Clear the enviroment</p><pre class="codeinput">clc;
+clear <span class="string">all</span>;
+close <span class="string">all</span>;
+</pre><h2>Part A<a name="2"></a></h2><pre class="codeinput">G0 = imread(<span class="string">'me.jpg'</span>);
+G0 = im2double(rgb2gray(G0));
+G0 = imresize(G0,[256 256]);
+figure;
+imshow(G0);
+title(<span class="string">'Original Image'</span>);
+figure;
+imhist(G0);
+title(<span class="string">'Intensity Histogram of Original Image'</span>)
+</pre><img vspace="5" hspace="5" src="Lab4_01.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="Lab4_02.png" style="width:560px;height:420px;" alt=""> <h2>Part B<a name="3"></a></h2><pre class="codeinput">g = fspecial(<span class="string">'gaussian'</span>,100,2.5);
+s = size(g);
+g = padarray(g,[(256-s(1))/2 (256-s(1))/2],0,<span class="string">'both'</span>);
+figure
+imagesc(g);
+title(<span class="string">'Gaussian Filter'</span>)
+figure;
+imagesc(log(abs(fftshift(fft2(g)))))
+title(<span class="string">'FFT of Lowpass filter'</span>)
+</pre><img vspace="5" hspace="5" src="Lab4_03.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab4_04.png" style="width:560px;height:420px;" alt=""> <h2>Part C<a name="4"></a></h2><pre class="codeinput">Gk = imfilter(G0,g);
+k = 1;
+figure;
+imshow(Gk)
+title(strcat(<span class="string">'Low passed image with k='</span>,num2str(k)));
+figure;
+imagesc(log(abs(fftshift(fft2(Gk)))))
+title(strcat(<span class="string">'FFT of Lowpassed Image with k='</span>,num2str(k)));
+figure;
+imshow(imresize(Gk, [256/(2^k) 256/(2^k)]));
+title(strcat(<span class="string">'Filtered Image Resized to '</span>,num2str(256/(2^k))))
+figure;
+imagesc(log(abs(fftshift(fft2(imresize(Gk, [256/(2^k) 256/(2^k)]))))))
+title(strcat(<span class="string">'FFT of Lowpassed Resized Image with k='</span>,num2str(k)));
+<span class="keyword">for</span> i = 2:8
+    k = k + 1;
+
+    Gk = imfilter(Gk,g);
+    figure;
+    imshow(Gk)
+    title(strcat(<span class="string">'Low passed image with k='</span>,num2str(k)));
+    figure;
+    imagesc(log(abs(fftshift(fft2(Gk)))))
+    title(strcat(<span class="string">'FFT of Lowpassed Image with k='</span>,num2str(k)));
+    figure;
+    imshow(imresize(Gk, [256/(2^k) 256/(2^k)]));
+    title(strcat(<span class="string">'Filtered Image Resized to '</span>,num2str(256/(2^k))))
+    figure;
+    imagesc(log(abs(fftshift(fft2(imresize(Gk, [256/(2^k) 256/(2^k)]))))))
+    title(strcat(<span class="string">'FFT of Lowpassed Resized Image with k='</span>,num2str(k)));
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="Lab4_05.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="Lab4_06.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab4_07.png" style="width:251px;height:193px;" alt=""> <img vspace="5" hspace="5" src="Lab4_08.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab4_09.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="Lab4_10.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab4_11.png" style="width:200px;height:142px;" alt=""> <img vspace="5" hspace="5" src="Lab4_12.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab4_13.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="Lab4_14.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab4_15.png" style="width:174px;height:116px;" alt=""> <img vspace="5" hspace="5" src="Lab4_16.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab4_17.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="Lab4_18.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab4_19.png" style="width:162px;height:103px;" alt=""> <img vspace="5" hspace="5" src="Lab4_20.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab4_21.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="Lab4_22.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab4_23.png" style="width:155px;height:102px;" alt=""> <img vspace="5" hspace="5" src="Lab4_24.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab4_25.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="Lab4_26.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab4_27.png" style="width:152px;height:102px;" alt=""> <img vspace="5" hspace="5" src="Lab4_28.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab4_29.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="Lab4_30.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab4_31.png" style="width:150px;height:102px;" alt=""> <img vspace="5" hspace="5" src="Lab4_32.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab4_33.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="Lab4_34.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab4_35.png" style="width:150px;height:102px;" alt=""> <img vspace="5" hspace="5" src="Lab4_36.png" style="width:560px;height:420px;" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Lab 4:  Multiscale representation and image enhancements
+% Clear the enviroment
+clc;
+clear all;
+close all;
+%% Part A
+G0 = imread('me.jpg');
+G0 = im2double(rgb2gray(G0));
+G0 = imresize(G0,[256 256]);
+figure;
+imshow(G0);
+title('Original Image');
+figure;
+imhist(G0);
+title('Intensity Histogram of Original Image')
+%% Part B
+g = fspecial('gaussian',100,2.5);
+s = size(g);
+g = padarray(g,[(256-s(1))/2 (256-s(1))/2],0,'both');
+figure
+imagesc(g);
+title('Gaussian Filter')
+figure;
+imagesc(log(abs(fftshift(fft2(g)))))
+title('FFT of Lowpass filter')
+%% Part C
+Gk = imfilter(G0,g);
+k = 1;
+figure;
+imshow(Gk)
+title(strcat('Low passed image with k=',num2str(k)));
+figure;
+imagesc(log(abs(fftshift(fft2(Gk)))))
+title(strcat('FFT of Lowpassed Image with k=',num2str(k)));
+figure;
+imshow(imresize(Gk, [256/(2^k) 256/(2^k)]));
+title(strcat('Filtered Image Resized to ',num2str(256/(2^k))))
+figure;
+imagesc(log(abs(fftshift(fft2(imresize(Gk, [256/(2^k) 256/(2^k)]))))))
+title(strcat('FFT of Lowpassed Resized Image with k=',num2str(k)));
+for i = 2:8
+    k = k + 1;
+    
+    Gk = imfilter(Gk,g);
+    figure;
+    imshow(Gk)
+    title(strcat('Low passed image with k=',num2str(k)));
+    figure;
+    imagesc(log(abs(fftshift(fft2(Gk)))))
+    title(strcat('FFT of Lowpassed Image with k=',num2str(k)));
+    figure;
+    imshow(imresize(Gk, [256/(2^k) 256/(2^k)]));
+    title(strcat('Filtered Image Resized to ',num2str(256/(2^k))))
+    figure;
+    imagesc(log(abs(fftshift(fft2(imresize(Gk, [256/(2^k) 256/(2^k)]))))))
+    title(strcat('FFT of Lowpassed Resized Image with k=',num2str(k)));
+end
+
+
+##### SOURCE END #####
+--></body></html>
