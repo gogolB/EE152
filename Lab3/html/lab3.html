@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Lab 3</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-02-06"><meta name="DC.source" content="lab3.m"><style type="text/css">
+      --><title>Lab 3</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-02-15"><meta name="DC.source" content="lab3.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -77,15 +77,21 @@ sky_256 = imresize(sky, [256 256]);
 </pre><p>Displaying the Fourier Transform of the bricks and the sky</p><pre class="codeinput">figure;
 imshow(bricks_256)
 bricks_gray = rgb2gray(bricks_256);
+title(<span class="string">'Sky Image'</span>)
+
 figure;
 imagesc(log(abs(fftshift(fft2(bricks_gray)))))
+title(<span class="string">'FFT of bricks'</span>)
 
 figure;
 imshow(sky_256)
 sky_gray = rgb2gray(sky_256);
+title(<span class="string">'Sky image'</span>)
+
 figure;
 imagesc(log(abs(fftshift(fft2(sky_gray)))))
-</pre><img vspace="5" hspace="5" src="lab3_01.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_02.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="lab3_03.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_04.png" style="width:560px;height:420px;" alt=""> <p>Applying a low pass filter to the bricks yields the following</p><pre class="codeinput">lpf = fspecial(<span class="string">'gaussian'</span>,5,1.7);
+title(<span class="string">'FFT of sky'</span>)
+</pre><img vspace="5" hspace="5" src="lab3_01.png" alt=""> <img vspace="5" hspace="5" src="lab3_02.png" alt=""> <img vspace="5" hspace="5" src="lab3_03.png" alt=""> <img vspace="5" hspace="5" src="lab3_04.png" alt=""> <p>Applying a low pass filter to the bricks yields the following</p><pre class="codeinput">lpf = fspecial(<span class="string">'gaussian'</span>,5,1.7);
 hpf = [0 0 0 0 0;
        0 0 0 0 0;
        0 0 1 0 0;
@@ -113,7 +119,7 @@ title(<span class="string">'Magnitude of the bricks after HPF'</span>);
 figure;
 imagesc(angle(fftshift(fft2(bricks_hpf))))
 title(<span class="string">'Phase of the bricks after HPF'</span>);
-</pre><img vspace="5" hspace="5" src="lab3_05.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_06.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="lab3_07.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="lab3_08.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_09.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="lab3_10.png" style="width:560px;height:420px;" alt=""> <p>The energy for the high pass and low pass are given by:</p><pre class="codeinput">energy_lpf = norm(fft2(bricks_lpf),2);
+</pre><img vspace="5" hspace="5" src="lab3_05.png" alt=""> <img vspace="5" hspace="5" src="lab3_06.png" alt=""> <img vspace="5" hspace="5" src="lab3_07.png" alt=""> <img vspace="5" hspace="5" src="lab3_08.png" alt=""> <img vspace="5" hspace="5" src="lab3_09.png" alt=""> <img vspace="5" hspace="5" src="lab3_10.png" alt=""> <p>The energy for the high pass and low pass are given by:</p><pre class="codeinput">energy_lpf = norm(fft2(bricks_lpf),2);
 energy_hpf = norm(fft2(bricks_hpf),2);
 fprintf(<span class="string">'Bricks Energy HPF = %d, LPF Energy = %d\n'</span>, energy_hpf, energy_lpf);
 </pre><pre class="codeoutput">Bricks Energy HPF = 2.691808e+05, LPF Energy = 1.083897e+07
@@ -139,7 +145,7 @@ title(<span class="string">'Magnitude of the sky after HPF'</span>);
 figure;
 imagesc(angle(fftshift(fft2(sky_hpf))))
 title(<span class="string">'Phase of the sky after HPF'</span>);
-</pre><img vspace="5" hspace="5" src="lab3_11.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_12.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="lab3_13.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="lab3_14.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_15.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="lab3_16.png" style="width:560px;height:420px;" alt=""> <p>The energy for the high pass and low pass are given by:</p><pre class="codeinput">energy_lpf = norm(fft2(sky_lpf),2);
+</pre><img vspace="5" hspace="5" src="lab3_11.png" alt=""> <img vspace="5" hspace="5" src="lab3_12.png" alt=""> <img vspace="5" hspace="5" src="lab3_13.png" alt=""> <img vspace="5" hspace="5" src="lab3_14.png" alt=""> <img vspace="5" hspace="5" src="lab3_15.png" alt=""> <img vspace="5" hspace="5" src="lab3_16.png" alt=""> <p>The energy for the high pass and low pass are given by:</p><pre class="codeinput">energy_lpf = norm(fft2(sky_lpf),2);
 energy_hpf = norm(fft2(sky_hpf),2);
 fprintf(<span class="string">'Sky Energy HPF = %d, LPF Energy = %d\n'</span>, energy_hpf, energy_lpf);
 </pre><pre class="codeoutput">Sky Energy HPF = 1.646941e+04, LPF Energy = 8.817600e+06
@@ -172,7 +178,7 @@ figure;
 imshow(sky_gray_modfied);
 title(<span class="string">'Image after adding signal'</span>);
 </pre><pre class="codeoutput">Warning: Displaying real part of complex input. 
-</pre><img vspace="5" hspace="5" src="lab3_17.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="lab3_18.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="lab3_19.png" style="width:354px;height:295px;" alt=""> <p>Removing the signal</p><pre class="codeinput">sky_fft(128+64,128+64) = 0;
+</pre><img vspace="5" hspace="5" src="lab3_17.png" alt=""> <img vspace="5" hspace="5" src="lab3_18.png" alt=""> <img vspace="5" hspace="5" src="lab3_19.png" alt=""> <p>Removing the signal</p><pre class="codeinput">sky_fft(128+64,128+64) = 0;
 sky_fft(128-64,128-64) = 0;
 sky_fft(128-64,128+64) = 0;
 sky_fft(128+64,128-64) = 0;
@@ -192,7 +198,7 @@ sky_gray_modfied = uint8(ifft2(sky_fft_modified));
 figure;
 imshow(sky_gray_modfied);
 title(<span class="string">'Image after Removing signal'</span>);
-</pre><img vspace="5" hspace="5" src="lab3_20.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="lab3_21.png" style="width:354px;height:295px;" alt=""> <h2>Spatial Frequencies 2<a name="11"></a></h2><p>Load in the images</p><pre class="codeinput">g_img = imread(<span class="string">'G.jpg'</span>);
+</pre><img vspace="5" hspace="5" src="lab3_20.png" alt=""> <img vspace="5" hspace="5" src="lab3_21.png" alt=""> <h2>Spatial Frequencies 2<a name="11"></a></h2><p>Load in the images</p><pre class="codeinput">g_img = imread(<span class="string">'G.jpg'</span>);
 b_img = imread(<span class="string">'B.jpg'</span>);
 
 g_256 = imresize(g_img, [256 256]);
@@ -220,7 +226,7 @@ title(<span class="string">'B Image'</span>);
 figure;
 imagesc(log(abs(fftshift(b_fft))));
 title(<span class="string">'FFT of B Image'</span>);
-</pre><img vspace="5" hspace="5" src="lab3_22.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_23.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="lab3_24.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_25.png" style="width:560px;height:420px;" alt=""> <p>Sharpening the image with unsharp</p><pre class="codeinput">g_unsharp = imsharpen(g_gray);
+</pre><img vspace="5" hspace="5" src="lab3_22.png" alt=""> <img vspace="5" hspace="5" src="lab3_23.png" alt=""> <img vspace="5" hspace="5" src="lab3_24.png" alt=""> <img vspace="5" hspace="5" src="lab3_25.png" alt=""> <p>Sharpening the image with unsharp</p><pre class="codeinput">g_unsharp = imsharpen(g_gray);
 b_unsharp = imsharpen(b_gray);
 
 figure;
@@ -230,7 +236,7 @@ title(<span class="string">'G with unsharp'</span>);
 figure;
 imshow(b_unsharp);
 title(<span class="string">'B with unsharp'</span>);
-</pre><img vspace="5" hspace="5" src="lab3_26.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_27.png" style="width:354px;height:295px;" alt=""> <p>Sharpening the images with high boost</p><pre class="codeinput">[J0, J1] = Highboost(g_gray, 1.5);
+</pre><img vspace="5" hspace="5" src="lab3_26.png" alt=""> <img vspace="5" hspace="5" src="lab3_27.png" alt=""> <p>Sharpening the images with high boost</p><pre class="codeinput">[J0, J1] = Highboost(g_gray, 1.5);
 
 figure;
 imshow(J0);
@@ -249,7 +255,7 @@ title(<span class="string">'B with highboost - J0'</span>);
 figure;
 imshow(J1);
 title(<span class="string">'B with highboost - J1'</span>);
-</pre><img vspace="5" hspace="5" src="lab3_28.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_29.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_30.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_31.png" style="width:354px;height:295px;" alt=""> <p>Swapping the phase of the two images.</p><pre class="codeinput">g_mag = abs(g_fft);
+</pre><img vspace="5" hspace="5" src="lab3_28.png" alt=""> <img vspace="5" hspace="5" src="lab3_29.png" alt=""> <img vspace="5" hspace="5" src="lab3_30.png" alt=""> <img vspace="5" hspace="5" src="lab3_31.png" alt=""> <p>Swapping the phase of the two images.</p><pre class="codeinput">g_mag = abs(g_fft);
 b_mag = abs(b_fft);
 g_phase = angle(g_fft);
 b_phase = angle(b_fft);
@@ -267,7 +273,84 @@ title(<span class="string">'G Magnitude with B phase'</span>);
 figure;
 imshow(s2_img);
 title(<span class="string">'B Magnitude with G phase'</span>);
-</pre><img vspace="5" hspace="5" src="lab3_32.png" style="width:354px;height:295px;" alt=""> <img vspace="5" hspace="5" src="lab3_33.png" style="width:354px;height:295px;" alt=""> <h2>More Fun with Frequencies<a name="15"></a></h2><h2>Geometric Transforms<a name="16"></a></h2><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+</pre><img vspace="5" hspace="5" src="lab3_32.png" alt=""> <img vspace="5" hspace="5" src="lab3_33.png" alt=""> <h2>More Fun with Frequencies<a name="15"></a></h2><pre class="codeinput">gogol = imread(<span class="string">'fg2.jpg'</span>);
+<span class="comment">%gogol = imcrop(gogol, [194 290 333 538]);</span>
+gogol = imcrop(gogol, [194 290 139 248]);
+gogol = imresize(gogol, [256 256]);
+
+jesse = imread(<span class="string">'Jesse.jpg'</span>);
+<span class="comment">%jesse = imcrop(jesse, [163 177 260 351]);</span>
+jesse = imcrop(jesse, [163 177 97 174]);
+jesse = imresize(jesse, [256 256]);
+
+fixedPt = [82 118; 172 120];
+movingPt = [90 128; 176 139];
+
+tform = fitgeotrans(movingPt,fixedPt,<span class="string">'NonreflectiveSimilarity'</span>);
+
+Jregistered = imwarp(jesse,tform,<span class="string">'OutputView'</span>,imref2d(size(gogol)));
+
+figure;
+imshowpair(gogol,Jregistered)
+title(<span class="string">'Images of Jesse and Me after being reg'</span>);
+
+lpf = fspecial(<span class="string">'gaussian'</span>,5,10);
+hpf = [0 0 0 0 0;
+       0 0 0 0 0;
+       0 0 1 0 0;
+       0 0 0 0 0;
+       0 0 0 0 0] - lpf;
+
+gogol_lpf = imfilter(double(gogol), lpf, <span class="string">'replicate'</span>);
+Jregistered_hpf = imfilter(double(Jregistered), hpf, <span class="string">'replicate'</span>);
+
+figure;
+imshow(uint8(gogol_lpf + 15*Jregistered_hpf));
+title(<span class="string">'High freq of Jesse and Low freq of Gogol'</span>);
+</pre><img vspace="5" hspace="5" src="lab3_34.png" alt=""> <img vspace="5" hspace="5" src="lab3_35.png" alt=""> <h2>Geometric Transforms<a name="16"></a></h2><p>Rotation a mesh</p><pre class="codeinput">theta=-30;
+theta=deg2rad(theta);
+R = [cos(theta) -sin(theta);
+    sin(theta) cos(theta)];
+
+
+[x,y] = meshgrid(1:64);
+C = 0.*(x + y);
+
+rot_x = zeros(64,64);
+rot_y = zeros(64,64);
+<span class="keyword">for</span> i = 1:1:length(x)
+    <span class="keyword">for</span> j = 1:1:length(y)
+        temp = R*[x(i,j);y(i,j)];
+        rot_x(i,j) = temp(1);
+        rot_y(i,j) = temp(2);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+figure;
+surf(x,y,C);
+hold <span class="string">on</span>
+surf(rot_x,rot_y,C);
+hold <span class="string">off</span>
+view(-90,-90)
+</pre><img vspace="5" hspace="5" src="lab3_36.png" alt=""> <p>Now do it for the image</p><pre class="codeinput">gogol_g = rgb2gray(gogol);
+[x,y] = meshgrid(1:256);
+
+
+[u,v] = meshgrid(1:256);
+rot_u = zeros(256,256);
+rot_v = zeros(256,256);
+<span class="keyword">for</span> i = 1:1:length(u)
+    <span class="keyword">for</span> j = 1:1:length(v)
+        temp = R*[u(i,j);v(i,j)];
+        rot_u(i,j) = temp(1);
+        rot_v(i,j) = temp(2);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+rot_gogol = interp2(u,v, im2double(gogol_g), rot_u, rot_v, <span class="string">'cubic'</span>);
+figure;
+imshow(rot_gogol);
+</pre><img vspace="5" hspace="5" src="lab3_37.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Lab 3
 %%
@@ -287,14 +370,20 @@ sky_256 = imresize(sky, [256 256]);
 figure;
 imshow(bricks_256)
 bricks_gray = rgb2gray(bricks_256);
+title('Sky Image')
+
 figure;
 imagesc(log(abs(fftshift(fft2(bricks_gray)))))
+title('FFT of bricks')
 
 figure;
 imshow(sky_256)
 sky_gray = rgb2gray(sky_256);
+title('Sky image')
+
 figure;
 imagesc(log(abs(fftshift(fft2(sky_gray)))))
+title('FFT of sky')
 %%
 % Applying a low pass filter to the bricks yields the following
 lpf = fspecial('gaussian',5,1.7);
@@ -500,7 +589,92 @@ figure;
 imshow(s2_img);
 title('B Magnitude with G phase');
 %% More Fun with Frequencies
+
+gogol = imread('fg2.jpg');
+%gogol = imcrop(gogol, [194 290 333 538]);
+gogol = imcrop(gogol, [194 290 139 248]);
+gogol = imresize(gogol, [256 256]);
+
+jesse = imread('Jesse.jpg');
+%jesse = imcrop(jesse, [163 177 260 351]);
+jesse = imcrop(jesse, [163 177 97 174]);
+jesse = imresize(jesse, [256 256]);
+
+fixedPt = [82 118; 172 120];
+movingPt = [90 128; 176 139];
+
+tform = fitgeotrans(movingPt,fixedPt,'NonreflectiveSimilarity');
+
+Jregistered = imwarp(jesse,tform,'OutputView',imref2d(size(gogol)));
+
+figure;
+imshowpair(gogol,Jregistered)
+title('Images of Jesse and Me after being reg');
+
+lpf = fspecial('gaussian',5,10);
+hpf = [0 0 0 0 0;
+       0 0 0 0 0;
+       0 0 1 0 0;
+       0 0 0 0 0;
+       0 0 0 0 0] - lpf;
+
+gogol_lpf = imfilter(double(gogol), lpf, 'replicate');
+Jregistered_hpf = imfilter(double(Jregistered), hpf, 'replicate');
+
+figure;
+imshow(uint8(gogol_lpf + 15*Jregistered_hpf));
+title('High freq of Jesse and Low freq of Gogol');
+
 %% Geometric Transforms
+% Rotation a mesh
+theta=-30;
+theta=deg2rad(theta);
+R = [cos(theta) -sin(theta);
+    sin(theta) cos(theta)];
+
+
+[x,y] = meshgrid(1:64);
+C = 0.*(x + y);
+
+rot_x = zeros(64,64);
+rot_y = zeros(64,64);
+for i = 1:1:length(x)
+    for j = 1:1:length(y)
+        temp = R*[x(i,j);y(i,j)];  
+        rot_x(i,j) = temp(1);
+        rot_y(i,j) = temp(2);
+    end
+end
+
+figure;
+surf(x,y,C);
+hold on
+surf(rot_x,rot_y,C);
+hold off
+view(-90,-90)
+
+
+%%
+% Now do it for the image
+gogol_g = rgb2gray(gogol);
+[x,y] = meshgrid(1:256);
+
+
+[u,v] = meshgrid(1:256);
+rot_u = zeros(256,256);
+rot_v = zeros(256,256);
+for i = 1:1:length(u)
+    for j = 1:1:length(v)
+        temp = R*[u(i,j);v(i,j)];  
+        rot_u(i,j) = temp(1);
+        rot_v(i,j) = temp(2);
+    end
+end
+
+rot_gogol = interp2(u,v, im2double(gogol_g), rot_u, rot_v, 'cubic');
+figure;
+imshow(rot_gogol);
+
 
 ##### SOURCE END #####
 --></body></html>

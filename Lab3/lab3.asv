@@ -16,20 +16,14 @@ sky_256 = imresize(sky, [256 256]);
 figure;
 imshow(bricks_256)
 bricks_gray = rgb2gray(bricks_256);
-title('Sky Image')
-
 figure;
 imagesc(log(abs(fftshift(fft2(bricks_gray)))))
-title('FFT of bricks')
 
 figure;
 imshow(sky_256)
 sky_gray = rgb2gray(sky_256);
-title('Sky image')
-
 figure;
 imagesc(log(abs(fftshift(fft2(sky_gray)))))
-title('FFT of sky')
 %%
 % Applying a low pass filter to the bricks yields the following
 lpf = fspecial('gaussian',5,1.7);
@@ -272,52 +266,18 @@ imshow(uint8(gogol_lpf + 15*Jregistered_hpf));
 title('High freq of Jesse and Low freq of Gogol');
 
 %% Geometric Transforms
-% Rotation a mesh
+[x,y] = meshgrid(1:256);
+C = 0 .* (x * y);
 theta=-30;
 theta=deg2rad(theta);
 R = [cos(theta) -sin(theta);
     sin(theta) cos(theta)];
 
-
-[x,y] = meshgrid(1:64);
-C = 0.*(x + y);
-
-rot_x = zeros(64,64);
-rot_y = zeros(64,64);
-for i = 1:1:length(x)
-    for j = 1:1:length(y)
-        temp = R*[x(i,j);y(i,j)];  
-        rot_x(i,j) = temp(1);
-        rot_y(i,j) = temp(2);
-    end
+rot_x = zeros(256, 256);
+rot_y = zeros(256, 256);
+for i = 1:length(x)
+   for j = i:length(y)
+      temp = R*[x(1,i);y(j,1)];
+      rot_x(i
+   end
 end
-
-figure;
-surf(x,y,C);
-hold on
-surf(rot_x,rot_y,C);
-hold off
-view(-90,-90)
-
-
-%%
-% Now do it for the image
-gogol_g = rgb2gray(gogol);
-[x,y] = meshgrid(1:256);
-
-
-[u,v] = meshgrid(1:256);
-rot_u = zeros(256,256);
-rot_v = zeros(256,256);
-for i = 1:1:length(u)
-    for j = 1:1:length(v)
-        temp = R*[u(i,j);v(i,j)];  
-        rot_u(i,j) = temp(1);
-        rot_v(i,j) = temp(2);
-    end
-end
-
-rot_gogol = interp2(u,v, im2double(gogol_g), rot_u, rot_v, 'cubic');
-figure;
-imshow(rot_gogol);
-
